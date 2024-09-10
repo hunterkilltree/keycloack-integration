@@ -7,17 +7,18 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 public class CorsConfiguration {
-  @Bean
-  public CorsFilter corsFilter() {
-    org.springframework.web.cors.CorsConfiguration corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
+    @Bean
+    public CorsFilter corsFilter() {
+        org.springframework.web.cors.CorsConfiguration corsConfiguration =
+                new org.springframework.web.cors.CorsConfiguration();
 
-    corsConfiguration.addAllowedOrigin("*");
-    corsConfiguration.addAllowedMethod("*");
-    corsConfiguration.addAllowedHeader("*");
+        corsConfiguration.addAllowedOrigin("*");
+        corsConfiguration.addAllowedMethod("*");
+        corsConfiguration.addAllowedHeader("*");
 
-    UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
-    urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
+        UrlBasedCorsConfigurationSource urlBasedCorsConfigurationSource = new UrlBasedCorsConfigurationSource();
+        urlBasedCorsConfigurationSource.registerCorsConfiguration("/**", corsConfiguration);
 
-    return new CorsFilter(urlBasedCorsConfigurationSource);
-  }
+        return new CorsFilter(urlBasedCorsConfigurationSource);
+    }
 }

@@ -2,6 +2,7 @@ package com.hunterkilltree.keycloak_be.dto.identity;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +17,10 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class TokenExchangeResponse {
-  String accessToken;
-  String expiresIn;
-  String refreshExpiresIn;
-  String tokenType;
-  String idToken;
-  String scope;
+    String accessToken;
+    String expiresIn;
+    String refreshExpiresIn;
+    String tokenType;
+    String idToken;
+    String scope;
 }
