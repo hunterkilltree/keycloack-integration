@@ -40,8 +40,7 @@ public class ProfileService {
 
     public List<ProfileResponse> getAllProfiles() {
         var profiles = profileRepository.findAll();
-        return null;
-        // return profiles.stream().map(profileMapper::toProfileResponse).toList();
+        return profiles.stream().map(profileMapper::toProfileResponse).toList();
     }
 
     public ProfileResponse register(RegistrationRequest request) {
@@ -80,8 +79,7 @@ public class ProfileService {
         var profile = profileMapper.toProfile(request);
         profile.setUserId(userId);
 
-        profile = null;
-        // profile = profileRepository.save(profile);
+        profile = profileRepository.save(profile);
 
         return profileMapper.toProfileResponse(profile);
     }

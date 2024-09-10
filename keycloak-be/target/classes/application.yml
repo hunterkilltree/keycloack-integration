@@ -14,5 +14,5 @@ spring:
 
 idp:
   url: http://localhost:8180
-  client-id: german_app
-  client-secret: jJ1gdXhJbeOXMnqe1A1jnZVmc3WKCTx3
+  client-id: app_germany
+  client-secret: 3bpMEVmaryPn0H6SEWgCFQAU69AyFgBQ
