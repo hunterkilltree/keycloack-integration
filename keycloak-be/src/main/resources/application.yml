@@ -12,6 +12,12 @@ spring:
     mongodb:
       uri: mongodb://root:root@localhost:27017/keycloak-be?authSource=admin
 
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/hunterkilltree
+
 idp:
   url: http://localhost:8180
   client-id: app_germany
