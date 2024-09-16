@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hunterkilltree.keycloak_be.dto.identity.Credential;
@@ -11,6 +12,8 @@ import com.hunterkilltree.keycloak_be.dto.identity.TokenExchangeParam;
 import com.hunterkilltree.keycloak_be.dto.identity.UserCreationParam;
 import com.hunterkilltree.keycloak_be.dto.request.RegistrationRequest;
 import com.hunterkilltree.keycloak_be.dto.response.ProfileResponse;
+import com.hunterkilltree.keycloak_be.exception.AppException;
+import com.hunterkilltree.keycloak_be.exception.ErrorCode;
 import com.hunterkilltree.keycloak_be.exception.ErrorNormalizer;
 import com.hunterkilltree.keycloak_be.mapper.ProfileMapper;
 import com.hunterkilltree.keycloak_be.respository.IdentityClient;
@@ -40,6 +43,16 @@ public class ProfileService {
     @Value("${idp.client-secret}")
     @NonFinal
     String clientSecret;
+
+    public ProfileResponse getMyProfile() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        String userId = authentication.getName();
+
+        var profile =
+                profileRepository.findByUserId(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+
+        return profileMapper.toProfileResponse(profile);
+    }
 
     public List<ProfileResponse> getAllProfiles() {
         var profiles = profileRepository.findAll();
