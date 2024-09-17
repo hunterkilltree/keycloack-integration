@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +26,9 @@ public class Profile {
     @MongoId
     String profileId;
     // UserId from keycloak
+    @JsonProperty("id")
     String userId;
+
     String email;
     String username;
     String firstName;

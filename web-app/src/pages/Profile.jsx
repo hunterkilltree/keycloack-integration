@@ -4,12 +4,14 @@ import keycloak from "../keycloak";
 import { useEffect, useState } from "react";
 import { getMyProfile } from "../services/userService";
 import LineItem from "../components/LineItem";
+import { Navigate } from "react-router-dom";
 
 export default function Profile() {
   const [profile, setProfile] = useState({});
   const [snackSeverity, setSnackSeverity] = useState("info");
   const [snackBarOpen, setSnackBarOpen] = useState(false);
   const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [loading, setLoading] = useState(true); // Thêm state loading để theo dõi trạng thái tải
 
   const handleCloseSnackBar = (event, reason) => {
     if (reason === "clickaway") {
@@ -30,12 +32,27 @@ export default function Profile() {
       setSnackSeverity("error");
       setSnackBarMessage(errorResponse?.message ?? error.message);
       setSnackBarOpen(true);
+    } finally {
+      setLoading(false); // Kết thúc tải dữ liệu
     }
   };
 
   useEffect(() => {
-    getProfile();
+    if (keycloak.authenticated) {
+      getProfile();
+    } else {
+      setLoading(false); // Nếu không authenticated, dừng việc tải
+    }
   }, []);
+
+  // Kiểm tra trạng thái authenticated và loading
+  if (loading) {
+    return <div>Loading...</div>; // Hiển thị loading trong khi tải dữ liệu
+  }
+
+  if (!keycloak.authenticated) {
+    return <Navigate to="/login" />;
+  }
 
   console.log("AccessToken:", keycloak.token);
 

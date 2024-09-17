@@ -28,43 +28,7 @@ export default function Login() {
         idpHint: "google", // Use Google as the identity provider
       })
       .then(() => {
-        if (keycloak.authenticated) {
-          console.log("Logged in with Google");
-  
-          // Fetch the user profile after successful login
-          keycloak.loadUserProfile().then((profile) => {
-            console.log("User profile:", profile);
-  
-            // Access token
-            const token = keycloak.token;
-  
-            // Use the token to send data to your backend
-            fetch("http://localhost:8080/profile/my-profile", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`, // Include the access token in the Authorization header
-              },
-              body: JSON.stringify({
-                // Your data here
-                username: profile.username,
-                email: profile.email,
-                firstName: profile.firstName,
-                lastName: profile.lastName,
-              }),
-            })
-            .then(response => response.json())
-            .then(data => {
-              console.log("Data sent to backend:", data);
-              navigate("/dashboard"); // Redirect after successful data handling
-            })
-            .catch(error => {
-              console.error("Error sending data to backend:", error);
-            });
-          });
-        } else {
-          console.log("User not authenticated");
-        }
+        console.log("login success");
       })
       .catch((error) => {
         console.error("Keycloak login with Google failed", error);
@@ -79,14 +43,7 @@ export default function Login() {
     }
 
     if (keycloak.authenticated) {
-      keycloak.loadUserProfile().then((profile) => {
-        console.log("User profile:", profile);
-  
-        // Access token
-        const token = keycloak.token;
-        console.log(token);
-        
-      });
+      navigate("/profile");    
     }
     
   }, [navigate]);
@@ -121,6 +78,7 @@ export default function Login() {
         // Lưu access token vào localStorage hoặc xử lý theo yêu cầu
         keycloak.token = data.access_token;
         keycloak.refreshToken = data.refresh_token;
+        keycloak.authenticated = true;
 
         // navigate to new page
         navigate('/profile');

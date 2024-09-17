@@ -1,6 +1,7 @@
 package com.hunterkilltree.keycloak_be.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +15,7 @@ import com.hunterkilltree.keycloak_be.dto.request.RegistrationRequest;
 import com.hunterkilltree.keycloak_be.dto.request.UserLogin;
 import com.hunterkilltree.keycloak_be.dto.response.AccessToken;
 import com.hunterkilltree.keycloak_be.dto.response.ProfileResponse;
-import com.hunterkilltree.keycloak_be.exception.AppException;
-import com.hunterkilltree.keycloak_be.exception.ErrorCode;
+import com.hunterkilltree.keycloak_be.entity.Profile;
 import com.hunterkilltree.keycloak_be.exception.ErrorNormalizer;
 import com.hunterkilltree.keycloak_be.mapper.ProfileMapper;
 import com.hunterkilltree.keycloak_be.respository.IdentityClient;
@@ -50,9 +50,26 @@ public class ProfileService {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         String userId = authentication.getName();
 
-        var profile =
-                profileRepository.findByUserId(userId).orElseThrow(() -> new AppException(ErrorCode.USER_NOT_EXISTED));
+        Optional<Profile> profileOptional = profileRepository.findByUserId(userId);
 
+        if (profileOptional.isEmpty()) {
+            // Store user profile to db if they sign up by social
+            // get user from keycloak
+            var token = identityClient.exchangeToken(TokenExchangeParam.builder()
+                    .grant_type("client_credentials")
+                    .client_id(clientId)
+                    .client_secret(clientSecret)
+                    .scope("openid")
+                    .build());
+
+            log.info("TokenInfo {}", token);
+
+            // Get user with client Token and save to db
+            var newProfile = identityClient.getByUserId("Bearer " + token.getAccessToken(), userId);
+            Profile profileSaved = profileRepository.save(newProfile);
+            return profileMapper.toProfileResponse(profileSaved);
+        }
+        Profile profile = profileOptional.get();
         return profileMapper.toProfileResponse(profile);
     }
 
