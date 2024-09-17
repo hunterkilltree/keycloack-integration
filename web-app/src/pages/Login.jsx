@@ -70,11 +70,10 @@ export default function Login() {
         console.error("Keycloak login with Google failed", error);
       });
   };
-  
 
   useEffect(() => {
     const accessToken = getToken();
-
+    console.log("accessToken", accessToken);
     if (accessToken) {
       navigate("/");
     }
@@ -95,11 +94,42 @@ export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    // Handle form submission
-    console.log("Username:", username);
-    console.log("Password:", password);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    const loginData = {
+      grant_type: 'password',
+      client_id: "webapp_germany",
+      username: username,
+      password: password,
+    };
+
+    // console.log("Login data:", loginData);
+  
+    try {
+      const response = await fetch(`http://localhost:8180/realms/hunterkilltree/protocol/openid-connect/token`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams(loginData),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log('Access Token:', data.access_token);
+        // Lưu access token vào localStorage hoặc xử lý theo yêu cầu
+        keycloak.token = data.access_token;
+        keycloak.refreshToken = data.refresh_token;
+
+        // navigate to new page
+        navigate('/profile');
+      } else {
+        console.error('Login failed');
+      }
+    } catch (error) {
+      console.error('Error during login:', error);
+    }
   };
 
   return (
@@ -125,7 +155,7 @@ export default function Login() {
             <Typography variant="h5" component="h1" gutterBottom>
               Welcome to My App
             </Typography>
-            <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+            <Box component="form" onSubmit={handleLogin} sx={{ mt: 2 }}>
               <TextField
                 label="Username"
                 variant="outlined"
@@ -153,6 +183,7 @@ export default function Login() {
                 color="primary"
                 size="large"
                 fullWidth
+                onClick={handleLogin}
               >
                 Login
               </Button>

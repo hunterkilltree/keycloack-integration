@@ -1,4 +1,4 @@
-package com.hunterkilltree.keycloak_be.controlller;
+package com.hunterkilltree.keycloak_be.controller;
 
 import java.util.List;
 
@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.hunterkilltree.keycloak_be.dto.ApiResponse;
 import com.hunterkilltree.keycloak_be.dto.request.RegistrationRequest;
+import com.hunterkilltree.keycloak_be.dto.request.UserLogin;
+import com.hunterkilltree.keycloak_be.dto.response.AccessToken;
 import com.hunterkilltree.keycloak_be.dto.response.ProfileResponse;
 import com.hunterkilltree.keycloak_be.service.ProfileService;
 
@@ -30,6 +32,14 @@ public class ProfileController {
     ApiResponse<ProfileResponse> register(@RequestBody @Valid RegistrationRequest request) {
         return ApiResponse.<ProfileResponse>builder()
                 .result(profileService.register(request))
+                .build();
+    }
+
+    // Deprecated
+    @GetMapping("/login")
+    public ApiResponse<AccessToken> login(@RequestBody UserLogin user) {
+        return ApiResponse.<AccessToken>builder()
+                .result(profileService.login(user))
                 .build();
     }
 

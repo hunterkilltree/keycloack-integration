@@ -79,6 +79,8 @@ export default function Header() {
 
   const handleLogout = (event) => {
     handleMenuClose();
+    console.log("Logout");
+    
     logOut();
     window.location.href = "/login";
   };

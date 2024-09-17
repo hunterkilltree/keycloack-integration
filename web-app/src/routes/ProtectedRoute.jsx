@@ -1,9 +1,11 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import keycloak from "../keycloak";
 
 const ProtectedRoute = () => {
-  return keycloak.authenticated ? <Outlet /> : <Navigate to="/login" />;
+  console.log("Keycloak authenticated:", keycloak.authenticated);
+  
+  return keycloak.authenticated ? <Navigate to="/profile" /> : <Navigate to="/login" />;
 };
 
 export default ProtectedRoute;

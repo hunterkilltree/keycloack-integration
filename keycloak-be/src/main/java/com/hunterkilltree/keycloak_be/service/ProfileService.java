@@ -11,6 +11,8 @@ import com.hunterkilltree.keycloak_be.dto.identity.Credential;
 import com.hunterkilltree.keycloak_be.dto.identity.TokenExchangeParam;
 import com.hunterkilltree.keycloak_be.dto.identity.UserCreationParam;
 import com.hunterkilltree.keycloak_be.dto.request.RegistrationRequest;
+import com.hunterkilltree.keycloak_be.dto.request.UserLogin;
+import com.hunterkilltree.keycloak_be.dto.response.AccessToken;
 import com.hunterkilltree.keycloak_be.dto.response.ProfileResponse;
 import com.hunterkilltree.keycloak_be.exception.AppException;
 import com.hunterkilltree.keycloak_be.exception.ErrorCode;
@@ -57,6 +59,22 @@ public class ProfileService {
     public List<ProfileResponse> getAllProfiles() {
         var profiles = profileRepository.findAll();
         return profiles.stream().map(profileMapper::toProfileResponse).toList();
+    }
+
+    // Deprecation
+    public AccessToken login(UserLogin user) {
+        // Exchange client Token
+        var token = identityClient.exchangeToken(TokenExchangeParam.builder()
+                .grant_type("password")
+                .client_id("webapp_germany")
+                .username(user.getUserName())
+                .password(user.getPassword())
+                .build());
+
+        log.info("TokenInfo {}", token);
+        AccessToken accessToken = new AccessToken();
+        accessToken.setAccessToken(token.getAccessToken());
+        return accessToken;
     }
 
     public ProfileResponse register(RegistrationRequest request) {

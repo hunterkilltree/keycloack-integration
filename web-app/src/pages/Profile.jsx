@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { getMyProfile } from "../services/userService";
 import LineItem from "../components/LineItem";
 
-export default function HomeTwo() {
+export default function Profile() {
   const [profile, setProfile] = useState({});
   const [snackSeverity, setSnackSeverity] = useState("info");
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -81,7 +81,7 @@ export default function HomeTwo() {
                 mb: "40px",
               }}
             >
-              Welcome back to Devteria, {profile.username} !
+              Welcome back to {profile.username} !
             </Typography>
             <LineItem header={"Username"} data={profile.username}></LineItem>
             <LineItem header={"Email"} data={profile.email}></LineItem>

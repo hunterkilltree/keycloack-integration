@@ -11,8 +11,11 @@ import {
 
 import { useState } from "react";
 import { register } from "../services/userService";
+import { useNavigate } from "react-router-dom";
 
 export default function Registration() {
+
+  const navigate = useNavigate();
 
   const handleCloseSnackBar = (event, reason) => {
     if (reason === "clickaway") {
@@ -49,6 +52,10 @@ export default function Registration() {
       setSnackSeverity("success");
       setSnackBarMessage("Registration completed successfully!");
       setSnackBarOpen(true);
+
+      // navigate to login page; user need to login again because after registration
+      // no access token from keycloak
+      navigate("/login");
     } catch (error) {
       const errorResponse = error.response.data;
       setSnackSeverity("error");
