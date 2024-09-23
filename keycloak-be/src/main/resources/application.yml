@@ -19,6 +19,7 @@ spring:
           issuer-uri: http://localhost:8180/realms/hunterkilltree
 
 idp:
+  realm: hunterkilltree
   url: http://localhost:8180
   client-id: app_germany
   client-secret: 3bpMEVmaryPn0H6SEWgCFQAU69AyFgBQ

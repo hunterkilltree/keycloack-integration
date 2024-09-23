@@ -18,14 +18,15 @@ import feign.QueryMap;
 
 @FeignClient(name = "identity-client", url = "${idp.url}")
 public interface IdentityClient {
+
     @PostMapping(
-            value = "/realms/hunterkilltree/protocol/openid-connect/token",
+            value = "/realms/${idp.realm}/protocol/openid-connect/token",
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     TokenExchangeResponse exchangeToken(@QueryMap TokenExchangeParam param);
 
-    @PostMapping(value = "/admin/realms/hunterkilltree/users", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/admin/realms/${idp.realm}/users", consumes = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<?> createUser(@RequestHeader("authorization") String token, @RequestBody UserCreationParam param);
 
-    @GetMapping(value = "/admin/realms/hunterkilltree/users/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/admin/realms/${idp.realm}/users/{userId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     Profile getByUserId(@RequestHeader("authorization") String token, @PathVariable String userId);
 }
