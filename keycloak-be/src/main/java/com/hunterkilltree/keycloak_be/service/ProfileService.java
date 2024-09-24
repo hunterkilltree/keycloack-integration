@@ -140,6 +140,29 @@ public class ProfileService {
         }
     }
 
+    // Everyone can update profile
+    public ProfileResponse updateProfile(Profile profile) {
+        // TODO: Update profile (info)
+        return null;
+    }
+
+    // Everyone can update their password
+    public ProfileResponse updatePassword(Profile profile) {
+        // TODO: Update password
+        return null;
+    }
+
+    // Only super-user can delete profile
+    public void deleteProfile(String userId) {
+        // TODO: Delete profile
+    }
+
+    // Only super-user can update role
+    public ProfileResponse updateRole(String userId, String role) {
+        // TODO: Update role
+        return null;
+    }
+
     private String extractUserId(ResponseEntity<?> response) {
         String location = response.getHeaders().get("Location").getFirst();
         String[] splitedStr = location.split("/");
